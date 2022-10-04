@@ -5,7 +5,6 @@ import Head from "@components/Head";
 import { APP } from "@constants/main";
 import useTranslation from "@hooks/useTranslation";
 import Link from "next/link";
-import MainContainer from "@components/Layout/MainContainer";
 
 const Error: React.FC = () => {
   const { t } = useTranslation();
@@ -20,7 +19,7 @@ const Error: React.FC = () => {
   );
 };
 
-const Container = styled(MainContainer)`
+const Container = styled.div`
   display: flex;
   align-items: center;
   text-align: center;
@@ -38,8 +37,8 @@ const Description = styled.h2`
   margin-top: 30px;
 
   a {
-    color: ${({ theme }) => theme.colors.text.lightest};
-    font-weight: ${({ theme }) => theme.weight.bold};
+    color: #59ab6e;
+    font-weight: bold;
   }
 `;
 

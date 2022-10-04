@@ -1,4 +1,4 @@
 export const APP = {
-  NAME: "Next Boilerplate",
+  NAME: "Watcher Shop",
   URL: "http:/localhost:3000",
 };
