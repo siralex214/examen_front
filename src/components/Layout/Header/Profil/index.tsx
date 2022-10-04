@@ -5,13 +5,19 @@ const Profil: React.FC = () => {
   return (
     <Container>
       <Box>
-        <StyledIcon name={"search"} size={25} color={"black"} />
+        <a href="">
+          <StyledIcon name={"search"} size={25} color={"black"} />
+        </a>
       </Box>
       <Box>
-        <StyledIcon name={"shopping-cart-2"} size={25} color={"black"} />
+        <a href="">
+          <StyledIcon name={"shopping-cart-2"} size={25} color={"black"} />
+        </a>
       </Box>
       <Box>
-        <StyledIcon name={"user"} size={25} color={"black"} />
+        <a href="/auth">
+          <StyledIcon name={"user"} size={25} color={"black"} />
+        </a>
       </Box>
     </Container>
   );
