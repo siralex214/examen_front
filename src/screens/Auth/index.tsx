@@ -1,6 +1,10 @@
+import Head from "@components/Head";
 import Header from "@components/Layout/Header";
+import ROUTES from "@constants/routes";
+import axios from "axios";
 import { NextPage } from "next";
-import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import React from "react";
 import styled from "styled-components";
 
 const AuthPage: NextPage = () => {
@@ -13,15 +17,52 @@ const AuthPage: NextPage = () => {
     password: "",
   });
 
+  const router = useRouter();
+
   return (
     <>
-      <Header />
+      <Header title={"connexion"} description={"Veuillez vous connectez"} />
       <Container>
         <Form
           onSubmit={(e) => {
             e.preventDefault();
             if (refInputEmail.current && refInputPassword.current) {
-              console.log(valueForm);
+              setValueForm({
+                email: refInputEmail.current.value,
+                password: refInputPassword.current.value,
+              });
+              const formData = new FormData();
+              formData.append("email", valueForm.email);
+              formData.append("password", valueForm.password);
+
+              axios
+                .post("http://127.0.0.1:8000/login", formData)
+                .then((res) => {
+                  if (res.data.message === "User not found") {
+                    if (refEmail.current) {
+                      refEmail.current.style.borderColor = "red";
+                      refEmail.current.style.visibility = "visible";
+                      refEmail.current.style.opacity = "1";
+                      refEmail.current.style.transform = "scale(1)";
+                    }
+                  } else if (res.data.message === "Invalid email") {
+                    if (refEmail.current) {
+                      refEmail.current.style.borderColor = "red";
+                      refEmail.current.style.visibility = "visible";
+                      refEmail.current.style.opacity = "1";
+                      refEmail.current.style.transform = "scale(1)";
+                    }
+                  } else if (res.data.message === "Invalid password") {
+                    if (refPassword.current) {
+                      refPassword.current.style.borderColor = "red";
+                      refPassword.current.style.visibility = "visible";
+                      refPassword.current.style.opacity = "1";
+                      refPassword.current.style.transform = "scale(1)";
+                    }
+                  } else if (res.data.message === "Logged in") {
+                    router.push("/");
+                  }
+                });
             }
           }}
         >
@@ -49,7 +90,7 @@ const AuthPage: NextPage = () => {
               }}
               type="email"
             />
-            <Style ref={refEmail}></Style>
+            <StyledSpan ref={refEmail}></StyledSpan>
           </BoxInput>
           <BoxLabel>
             <Label>
@@ -76,24 +117,48 @@ const AuthPage: NextPage = () => {
               }}
               type="password"
             />
-            <Style ref={refPassword}></Style>
+            <StyledSpan ref={refPassword}></StyledSpan>
           </BoxInput>
-          <input type="submit" value="envoyer" />
+          <StyledNoAccount>
+            Pas encore de compte, <a href={ROUTES.REGISTER}>inscris toi!</a>
+          </StyledNoAccount>
+          <InputSubmit type="submit" value="envoyer" />
         </Form>
       </Container>
     </>
   );
 };
 
-const Container = styled.div`
-  height: 85vh;
+export const InputSubmit = styled.input`
+  transition: all 0.3s;
+  cursor: pointer;
+  color: white;
+  margin-top: 30px;
+  line-height: 1.2;
+  font-size: 18px;
+  display: block;
+  width: 100%;
+  background-color: #333;
+  height: 60px;
+  padding: 0 20px;
+  outline: none;
+  border-radius: 10px;
+  border: none;
+  &:hover {
+    background-color: #444;
+  }
+`;
+
+export const Container = styled.div`
+  min-height: 85vh;
+  padding-top: 50px;
   background-color: #efefef;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const Form = styled.form`
+export const Form = styled.form`
   width: 680px;
   background: #fff;
   border-radius: 10px;
@@ -103,7 +168,7 @@ const Form = styled.form`
   padding-bottom: 33px;
 `;
 
-const Title = styled.h2`
+export const Title = styled.h2`
   width: 100%;
   display: block;
   font-size: 39px;
@@ -113,19 +178,19 @@ const Title = styled.h2`
   padding-bottom: 53px;
 `;
 
-const BoxLabel = styled.div`
+export const BoxLabel = styled.div`
   padding-bottom: 9px;
   padding-top: 31px;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-size: 16px;
   color: #555;
   line-height: 1.5;
   font-weight: 600;
 `;
 
-const BoxInput = styled.div`
+export const BoxInput = styled.div`
   position: relative;
   width: 100%;
   position: relative;
@@ -134,7 +199,7 @@ const BoxInput = styled.div`
   border-radius: 10px;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   font-family: Poppins-Regular;
   color: #333;
   line-height: 1.2;
@@ -148,7 +213,7 @@ const Input = styled.input`
   border: none;
 `;
 
-const Style = styled.span`
+export const StyledSpan = styled.span`
   position: absolute;
   display: block;
   width: calc(100% + 2px);
@@ -169,6 +234,10 @@ const Style = styled.span`
   -ms-transform: scaleX(1.1) scaleY(1.3);
   -o-transform: scaleX(1.1) scaleY(1.3);
   transform: scaleX(1.1) scaleY(1.3);
+`;
+
+export const StyledNoAccount = styled.p`
+  margin-bottom: 30px;
 `;
 
 export default AuthPage;
